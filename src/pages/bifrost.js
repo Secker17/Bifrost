@@ -1,9 +1,10 @@
+// Bifrost.js
 import React, { useState } from 'react';
 import styled, { keyframes, css } from 'styled-components';
 import { FaQuestionCircle, FaInfoCircle, FaGamepad, FaPhone } from 'react-icons/fa';
 
 // Replace this with your custom image URL or import your image file
-const BUTTON_IMAGE = 'https://i.ibb.co/yFxWgc0s/AJxt1-KNy-Zw-Rvqjji1-Teum-EKW2-C4qw-Tpl-RTJVy-M5s-Zx-VCwbq-Ogpyhnpz-T44-QB9-RF51-XVUc1-Ci-Pf8-N0-Bp.png'
+const BUTTON_IMAGE = 'https://i.ibb.co/yFxWgc0s/AJxt1-KNy-Zw-Rvqjji1-Teum-EKW2-C4qw-Tpl-RTJVy-M5s-Zx-VCwbq-Ogpyhnpz-T44-QB9-RF51-XVUc1-Ci-Pf8-N0-Bp.png';
 
 // Elegant pop-up animation with bounce
 const popUp = keyframes`
@@ -43,11 +44,11 @@ const FloatingButtonWrapper = styled.div`
 const CurvedText = styled.svg`
   width: 120px;
   height: 40px;
-  margin-bottom: -10px; /* Juster avstanden mellom teksten og knappen */
+  margin-bottom: -10px;
   
   text {
     font-size: 0.9rem;
-    fill:rgb(255, 255, 255);
+    fill: rgb(255, 255, 255);
     font-weight: 600;
   }
 `;
@@ -75,10 +76,10 @@ const FloatingButton = styled.button`
   }
 `;
 
-// Ticket panel styled with calm, dark blue contrasts
+// Ticket panel styled med rolige farger
 const TicketPanel = styled.div`
   position: fixed;
-  bottom: 160px; /* Positioned above the button */
+  bottom: 160px;
   right: 20px;
   width: 400px;
   max-width: 90%;
@@ -91,9 +92,9 @@ const TicketPanel = styled.div`
   z-index: 1200;
 `;
 
-// Header with dark blue gradient and "BIFROST" title
+// Header med gradient og tittel
 const PanelHeader = styled.div`
-  background: linear-gradient(135deg,rgb(255, 255, 255),rgb(255, 255, 255));
+  background: linear-gradient(135deg, rgb(255, 255, 255), rgb(255, 255, 255));
   padding: 15px 20px;
   display: flex;
   align-items: center;
@@ -108,7 +109,7 @@ const HeaderTitle = styled.h1`
   letter-spacing: 2px;
 `;
 
-// Close button in header corner
+// Lukkeknapp
 const CloseButton = styled.button`
   position: absolute;
   top: 20px;
@@ -120,13 +121,13 @@ const CloseButton = styled.button`
   cursor: pointer;
 `;
 
-// Panel body with very light blue background
+// Panel body
 const PanelBody = styled.div`
   padding: 20px;
   background: #e2e8f0;
 `;
 
-// Shared styling for form fields
+// Felles styling for formfelter
 const FormField = styled.div`
   margin-bottom: 18px;
 `;
@@ -181,7 +182,7 @@ const TextArea = styled.textarea`
 const SubmitButton = styled.button`
   width: 100%;
   padding: 14px;
-  background-color:rgb(0, 0, 0);
+  background-color: rgb(0, 0, 0);
   border: none;
   border-radius: 8px;
   color: #fff;
@@ -189,18 +190,17 @@ const SubmitButton = styled.button`
   cursor: pointer;
   transition: background-color 0.3s ease;
   &:hover {
-    background-color:rgb(0, 0, 0);
+    background-color: rgb(0, 0, 0);
   }
 `;
 
 const NextButton = styled(SubmitButton)`
-  background-color:rgb(0, 0, 0);
+  background-color: rgb(0, 0, 0);
   &:hover {
     background-color: #004488;
   }
 `;
 
-// Styled unordered list for Game Support links with icons
 const GameLinks = styled.ul`
   margin: 10px 0 18px 0;
   padding-left: 20px;
@@ -230,8 +230,6 @@ const LinkText = styled.a`
 `;
 
 const Bifrost = () => {
-  // isOpen: controls whether the panel is open or closed.
-  // step: 1 for category selection, 2 for form completion.
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState(1);
   const [ticket, setTicket] = useState({
@@ -271,17 +269,30 @@ const Bifrost = () => {
     }
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    // Her kan du sende ticket-data til backend/API for lagring
-    console.log('Ticket submitted:', ticket);
-    closePanel();
+    try {
+      // Hent eksisterende tickets fra localStorage (eller et tomt array om ingen finnes)
+      const storedTickets = localStorage.getItem("tickets");
+      const ticketsArray = storedTickets ? JSON.parse(storedTickets) : [];
+      
+      // Opprett et nytt ticket med et unikt id (her basert på tidsstempel)
+      const newTicket = { ...ticket, id: Date.now() };
+      
+      // Legg til det nye ticketet i arrayen og lagre tilbake til localStorage
+      const updatedTickets = [...ticketsArray, newTicket];
+      localStorage.setItem("tickets", JSON.stringify(updatedTickets));
+      
+      console.log('Ticket submitted:', newTicket);
+      closePanel();
+    } catch (error) {
+      console.error('Feil under innsending:', error);
+    }
   };
 
   return (
     <>
       <FloatingButtonWrapper>
-        {/* SVG med kurvet tekst */}
         <CurvedText viewBox="0 0 120 40">
           <defs>
             <path id="curve" d="M10,30 Q60,0 110,30" />
