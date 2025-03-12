@@ -47,7 +47,7 @@ const CurvedText = styled.svg`
   
   text {
     font-size: 0.9rem;
-    fill: #003366;
+    fill:rgb(255, 255, 255);
     font-weight: 600;
   }
 `;
