@@ -111,11 +111,11 @@ const HeaderTitle = styled.h1`
 // Close button in header corner
 const CloseButton = styled.button`
   position: absolute;
-  top: 10px;
+  top: 20px;
   right: 15px;
   background: transparent;
   border: none;
-  color: #fff;
+  color: black;
   font-size: 1.8rem;
   cursor: pointer;
 `;
