@@ -1,4 +1,3 @@
-// bifrost.js
 import React, { useState } from 'react';
 import styled, { keyframes, css } from 'styled-components';
 import { FaQuestionCircle, FaInfoCircle, FaGamepad, FaPhone } from 'react-icons/fa';
@@ -22,32 +21,51 @@ const popUp = keyframes`
   }
 `;
 
-// Blinking animation for the floating button when panel is closed
-const blink = keyframes`
-  0% { opacity: 1; }
-  50% { opacity: 0.5; }
-  100% { opacity: 1; }
+// Moderne, pulserende animasjon for flytende knapp når panelet er lukket
+const pulse = keyframes`
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
 `;
 
-// Floating button in bottom right corner with hover effect
-const FloatingButton = styled.button`
+// Wrapper for å samle både knappen og den kurvede teksten
+const FloatingButtonWrapper = styled.div`
   position: fixed;
   bottom: 20px;
   right: 20px;
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+// SVG for kurvet tekst over knappen
+const CurvedText = styled.svg`
+  width: 120px;
+  height: 40px;
+  margin-bottom: -10px; /* Juster avstanden mellom teksten og knappen */
+  
+  text {
+    font-size: 0.9rem;
+    fill: #003366;
+    font-weight: 600;
+  }
+`;
+
+// Floating button med hover-effekt og pulse-animasjon
+const FloatingButton = styled.button`
   background: transparent;
   border: none;
   padding: 0;
   cursor: pointer;
-  z-index: 1100;
   transition: transform 0.2s ease;
   &:hover {
     transform: scale(1.1);
   }
-  /* Blinking only when panel is closed */
   ${props =>
     !props.isOpen &&
     css`
-      animation: ${blink} 1.5s infinite;
+      animation: ${pulse} 2s infinite;
     `}
   img {
     width: 90px;
@@ -60,7 +78,7 @@ const FloatingButton = styled.button`
 // Ticket panel styled with calm, dark blue contrasts
 const TicketPanel = styled.div`
   position: fixed;
-  bottom: 130px; /* Positioned above the button */
+  bottom: 160px; /* Positioned above the button */
   right: 20px;
   width: 400px;
   max-width: 90%;
@@ -75,7 +93,7 @@ const TicketPanel = styled.div`
 
 // Header with dark blue gradient and "BIFROST" title
 const PanelHeader = styled.div`
-  background: linear-gradient(135deg, #003366, #0055aa);
+  background: linear-gradient(135deg,rgb(255, 255, 255),rgb(255, 255, 255));
   padding: 15px 20px;
   display: flex;
   align-items: center;
@@ -85,7 +103,7 @@ const PanelHeader = styled.div`
 
 const HeaderTitle = styled.h1`
   margin: 0;
-  color: #fff;
+  color: black;
   font-size: 1.8rem;
   letter-spacing: 2px;
 `;
@@ -163,7 +181,7 @@ const TextArea = styled.textarea`
 const SubmitButton = styled.button`
   width: 100%;
   padding: 14px;
-  background-color: #003366;
+  background-color:rgb(0, 0, 0);
   border: none;
   border-radius: 8px;
   color: #fff;
@@ -171,12 +189,12 @@ const SubmitButton = styled.button`
   cursor: pointer;
   transition: background-color 0.3s ease;
   &:hover {
-    background-color: #002244;
+    background-color:rgb(0, 0, 0);
   }
 `;
 
 const NextButton = styled(SubmitButton)`
-  background-color: #0055aa;
+  background-color:rgb(0, 0, 0);
   &:hover {
     background-color: #004488;
   }
@@ -255,21 +273,33 @@ const Bifrost = () => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    // Here you can send ticket data to backend/API for saving
+    // Her kan du sende ticket-data til backend/API for lagring
     console.log('Ticket submitted:', ticket);
     closePanel();
   };
 
   return (
     <>
-      <FloatingButton onClick={isOpen ? closePanel : openPanel} isOpen={isOpen}>
-        {/* Replace the src with your chosen image */}
-        <img src={BUTTON_IMAGE} alt="Ticket Icon" />
-      </FloatingButton>
+      <FloatingButtonWrapper>
+        {/* SVG med kurvet tekst */}
+        <CurvedText viewBox="0 0 120 40">
+          <defs>
+            <path id="curve" d="M10,30 Q60,0 110,30" />
+          </defs>
+          <text>
+            <textPath href="#curve" startOffset="50%" textAnchor="middle">
+              Need help?
+            </textPath>
+          </text>
+        </CurvedText>
+        <FloatingButton onClick={isOpen ? closePanel : openPanel} isOpen={isOpen}>
+          <img src={BUTTON_IMAGE} alt="Ticket Icon" />
+        </FloatingButton>
+      </FloatingButtonWrapper>
       {isOpen && (
         <TicketPanel>
           <PanelHeader>
-            <HeaderTitle>BIFROST</HeaderTitle>
+            <HeaderTitle>BIFROST SUPPORT</HeaderTitle>
             <CloseButton onClick={closePanel}>×</CloseButton>
           </PanelHeader>
           <PanelBody>
